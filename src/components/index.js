@@ -4,5 +4,6 @@ import Song from "./Song";
 
 export {
     Player,
-    Song
+    Song,
+    
 }
