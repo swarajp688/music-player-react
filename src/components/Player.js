@@ -6,11 +6,12 @@ import {
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
-import { audioPlay } from "../utils";
+
 
 const Player = ({songInfo, setSongInfo ,audioRef, currentSong,setCurrentSong, isPlaying, setIsPlaying ,songs, setSongs}) => {
   useEffect(()=>{
     console.info(isPlaying);
+    console.log(currentSong)
     const newSong = songs.map( (song)=>{
       if(song.id === currentSong.id){
         return {
@@ -27,6 +28,7 @@ const Player = ({songInfo, setSongInfo ,audioRef, currentSong,setCurrentSong, is
     setSongs(newSong);
   },[currentSong])
   const playSongHandler = () => {
+
     if (isPlaying) {
       audioRef.current.pause();
 
@@ -54,23 +56,35 @@ const Player = ({songInfo, setSongInfo ,audioRef, currentSong,setCurrentSong, is
       let songIndex = songs.findIndex((song)=> song.id === currentSong.id);
       //setCurrentSong(songs[songIndex]);
       if(direction ==='skip-forward'){
-        setCurrentSong(songs[(songIndex+1)%songs.length]);
+        await setCurrentSong(songs[(songIndex+1)%songs.length]);
       }
       if(direction ==='skip-back'){
         if(songIndex){
-          setCurrentSong(songs[songIndex-1]);
+          await setCurrentSong(songs[songIndex-1]);
+          if(isPlaying) audioRef.current.play();
         }else{
           songIndex = songs.length;
-          setCurrentSong(songs[songIndex-1]);
+          await setCurrentSong(songs[songIndex-1]);
+          if(isPlaying) audioRef.current.play();
         }
       }
-      audioPlay(isPlaying,audioRef);
+    if(isPlaying) audioRef.current.play();
+      
+  }
+  const styleTrack = {
+    transform : `translateX(${songInfo.animationPercentage}%)`
+    
   }
   return (
     <div className="player">
       <div className="time-control">
         <p>{getTime(songInfo.currentTime)}</p>
-        <input min={0} max={songInfo.duration || 0} value={songInfo.currentTime} onChange={dragHandler} type="range"></input>
+        <div style={{
+          background:`linear-gradient(to right,${currentSong.color[0]},${currentSong.color[1]})`,
+        }} className="track">
+          <input min={0} max={songInfo.duration || 0} value={songInfo.currentTime} onChange={dragHandler} type="range"></input>
+          <div style={styleTrack} className="track-progress"></div>
+        </div>
         <p>{songInfo.duration ? getTime(songInfo.duration) : "00:00"}</p>
       </div>
       <div className="play-control">
