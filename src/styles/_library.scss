@@ -63,20 +63,8 @@
     transform: translateX(0%);
     opacity: 1;
 }
-.rotate {
-    animation: rotation 8s infinite linear;
-  }
-.blink-lib {
-    animation: blink 2s infinite ;
-}
-@keyframes rotation {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(359deg);
-    }
-}
+
+
 @keyframes blink {
     0% {
         background-color: lightcoral;
