@@ -5,15 +5,13 @@ import {
   faAngleRight,
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect } from "react";
+
 
 
 const Player = ({songInfo, setSongInfo ,audioRef, currentSong,setCurrentSong, isPlaying, setIsPlaying ,songs, setSongs}) => {
-  useEffect(()=>{
-    console.info(isPlaying);
-    console.log(currentSong)
+  const activeLibHandler =(nextPrev)=> {
     const newSong = songs.map( (song)=>{
-      if(song.id === currentSong.id){
+      if(song.id === nextPrev.id){
         return {
           ...song,
           active:true,
@@ -26,7 +24,7 @@ const Player = ({songInfo, setSongInfo ,audioRef, currentSong,setCurrentSong, is
       }
     } );
     setSongs(newSong);
-  },[currentSong])
+  }
   const playSongHandler = () => {
 
     if (isPlaying) {
@@ -57,14 +55,17 @@ const Player = ({songInfo, setSongInfo ,audioRef, currentSong,setCurrentSong, is
       //setCurrentSong(songs[songIndex]);
       if(direction ==='skip-forward'){
         await setCurrentSong(songs[(songIndex+1)%songs.length]);
+        activeLibHandler(songs[(songIndex+1)%songs.length]);
       }
       if(direction ==='skip-back'){
         if(songIndex){
           await setCurrentSong(songs[songIndex-1]);
+          activeLibHandler(songs[songIndex-1]);
           if(isPlaying) audioRef.current.play();
         }else{
           songIndex = songs.length;
           await setCurrentSong(songs[songIndex-1]);
+          activeLibHandler(songs[songIndex-1]);
           if(isPlaying) audioRef.current.play();
         }
       }

@@ -13,7 +13,7 @@ function App() {
   const [currentSong, setCurrentSong] = useState(songs[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [libStatus, setLibStatus] = useState(false);
-
+  
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
     duration: 0,
@@ -23,7 +23,7 @@ function App() {
   const timeHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
-    const calPerc = Math.round((current * 100) / duration);
+    const calPerc = (current * 100) / duration;
     console.log(calPerc);
     setSongInfo({
       ...songInfo,
@@ -40,9 +40,9 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${libStatus ? 'library-active' : ''}`}>
       <Nav libStatus={libStatus} setLibStatus={setLibStatus} />
-      <Song currentSong={currentSong} />
+      <Song isPlaying={isPlaying} currentSong={currentSong} />
       <Player
         setSongs={setSongs}
         setCurrentSong={setCurrentSong}
